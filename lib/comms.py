@@ -109,7 +109,8 @@ class StealthConn(object):
             received_timestamp = datetime.datetime.strptime(timestamp.decode(ch_enc_code), timestamp_format)
             if self.previous_timestamp is not None:
                 if received_timestamp <= self.previous_timestamp:
-                    raise RuntimeError("Invalid Timestamp")
+                    print("Invalid Timestamp")
+                    self.conn.close()
                 else:
                     self.previous_timestamp = received_timestamp
             else:
@@ -127,7 +128,8 @@ class StealthConn(object):
                 print("Expected HMAC: {}".format(expected_hmac))
 
             if expected_hmac != received_hmac:
-                raise RuntimeError("Invalid HMAC")
+                print("Invalid HMAC")
+                self.conn.close()
 
 
             # Print information about received data
