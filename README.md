@@ -3,7 +3,11 @@ SkynetSecurityDemonstration is a Python application that uses botnets to demonst
 
 # Technical Specifications
 - Diffie-Hellman key exchange
-- Encryption and decryption block cipher with IV
-- Message integrity with MAC
+- Encryption and decryption with AES in CBC mode
+- Message integrity with HMAC
+- Replay prevention with timestamp 
 - Authentication with RSA digital signature based on PKCS#1
-- Encryption and decryption with AES cipher
+- Encryption and decryption with AES cipher based on RSA
+
+# Used language
+- Python
